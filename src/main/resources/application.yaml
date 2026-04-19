@@ -20,3 +20,9 @@ spring:
     show-sql: true
 server:
   port: ${PORT:8080}
+app:
+  validation:
+    password:
+      regex: ^[a-zA-Z0-9_]+$
+    email:
+      regex: ^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.(cl)$
