@@ -12,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -23,16 +22,22 @@ public class UserServiceImpl implements UserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${app.validation.password.regex}")
-    private String passwordRegex;
+    private final String passwordRegex;
 
-    @Value("${app.validation.email.regex}")
-    private String emailRegex;
+    private final String emailRegex;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
+    private final JwtService jwtService;
+
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper,PasswordEncoder passwordEncoder,
+                           JwtService jwtService,
+                           @Value("${app.validation.password.regex}")String passwordRegex,
+                           @Value("${app.validation.email.regex}") String emailRegex) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.passwordRegex = passwordRegex;
+        this.emailRegex = emailRegex;
     }
 
     @Override
@@ -53,9 +58,8 @@ public class UserServiceImpl implements UserService {
 
         User user = userMapper.toEntity(requestDTO);
         user.setPassword(passwordEncoder.encode(requestDTO.password()));
-        user.setToken(UUID.randomUUID().toString());
+        user.setToken(jwtService.generateToken(user.getEmail()));
 
         return userMapper.toDTO(userRepository.save(user));
     }
 }
-
