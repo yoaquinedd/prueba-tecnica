@@ -21,8 +21,8 @@ API REST desarrollada con Spring Boot para el registro de usuarios. Permite crea
 ### 1. Clonar el repositorio
 
 ```bash
-git clone <url-del-repositorio>
-cd creacion-usuarios
+git clone https://github.com/yoaquinedd/prueba-tecnica.git
+cd prueba-tecnica
 ```
 
 ### 2. Compilar el proyecto
